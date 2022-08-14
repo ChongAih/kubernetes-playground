@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: example-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /apple
+            pathType: Exact
+            backend:
+              service:
+                name: apple-service # name of the internal service
+                port:
+                  number: 5678 # port of the internal service
+          - path: /banana
+            pathType: Exact
+            backend:
+              service:
+                name: banana-service # name of the internal service
+                port:
+                  number: 5678 # port of the internal service
