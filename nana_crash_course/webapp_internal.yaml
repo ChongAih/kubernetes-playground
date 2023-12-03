@@ -10,7 +10,7 @@ metadata:
     app: webapp
 spec:
   # How many ports to be created
-  replicas: 1
+  replicas: 2
   # Which ports belong to which deployment identified using matchLabels
   selector:
     matchLabels:

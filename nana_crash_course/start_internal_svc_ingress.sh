@@ -28,9 +28,19 @@ kubectl get secret -n my-namespace
 kubectl get ingress -n my-namespace
 kubectl describe ingress webapp-ingress -n my-namespace # show all the host, path and backend
 
+echo "Checking whether multiple pods working"
+kubectl describe service webapp-service -n my-namespace # to check how many pods connected to this service
+# if working, should find the IP of the two replicas (10.1.0.22, 10.1.0.23) in endpoints
+# can check IPs of pods using 'kubectl describe pod <pod name> -n my-namespace'
+
 # Debug if ingress is not working
 kubectl get pods -n ingress-nginx
-kubectl logs ingress-nginx-controller-6648b5dbb8-4nhv4 -n ingress-nginx
+kubectl logs ingress-nginx-controller-6648b5dbb8-wqj64 -n ingress-nginx
+# call url multiple times and check ingress log to see if nginx working
+# if working, the IP of the two replicas (10.1.0.15, 10.1.0.14) should appear in round robin manner
+# can check IPs of pods using 'kubectl describe pod <pod name> -n my-namespace'
+# 192.168.65.3 - - [02/Dec/2023:23:30:02 +0000] "GET /profile-picture HTTP/1.1" 200 2906067 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" 594 0.048 [my-namespace-webapp-service-3000] [] 10.1.0.15:3000 2900407 0.048 200 8077fa018e7936e3a4ca3f7f36ad2208
+# 192.168.65.3 - - [02/Dec/2023:23:30:02 +0000] "GET /get-profile HTTP/1.1" 304 0 "http://localhost/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36" 576 0.404 [my-namespace-webapp-service-3000] [] 10.1.0.14:3000 0 0.404 304 1d7bfa3ddf16f533d20a70bdaa4e7938
 
 # kubectl describe ingress <ingress name> -n <namespace name>
 # kubectl describe svc <service name> -n <namespace name>
@@ -48,5 +58,10 @@ curl -kL http://localhost/service
 # kubectl delete configmap mongo-config -n my-namespace
 # kubectl delete secret mongo-secret -n my-namespace
 # kubectl delete ingress webapp-ingress -n my-namespace
+# kubectl delete deployment ingress-nginx-controller -n ingress-nginx
+# kubectl delete service ingress-nginx-controller-admission -n ingress-nginx
+# kubectl delete service ingress-nginx-controller -n ingress-nginx
+# kubectl delete job ingress-nginx-admission-create -n ingress-nginx
+# kubectl delete job ingress-nginx-admission-patch -n ingress-nginx
 # kubectl delete --all pods -n my-namespace
 # kubectl delete --all pods -n ingress-nginx
