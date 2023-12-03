@@ -59,6 +59,7 @@ spec:
   # should match the label of the pods
   selector:
     app: webapp
+  # external traffic directed from nodePort (user to ingress) to port (ingress to service) to targetport (service to deployment)
   ports:
     - protocol: TCP
       # External request will be channeled through this port
